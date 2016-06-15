@@ -25,22 +25,6 @@ func ExampleDevice() {
 	fmt.Printf("Sysnum:%v\n", d.Sysnum())
 	fmt.Printf("IsInitialized:%v\n", d.IsInitialized())
 	fmt.Printf("Driver:%v\n", d.Driver())
-
-	// Use one of the iterators
-	it := d.PropertyIterator()
-	it.Each(func(item interface{}) {
-		kv := item.([]string)
-		_ = fmt.Sprintf("Property:%v=%v\n", kv[0], kv[1])
-	})
-	// Output:
-	// Syspath:/sys/devices/virtual/mem/zero
-	// Devpath:/devices/virtual/mem/zero
-	// Devnode:/dev/zero
-	// Subsystem:mem
-	// Devtype:
-	// Sysnum:
-	// IsInitialized:true
-	// Driver:
 }
 
 func TestDeviceZero(t *testing.T) {
@@ -74,10 +58,6 @@ func TestDeviceZero(t *testing.T) {
 	if len(sysattrs) == 0 {
 		t.Fail()
 	}
-	it := d.PropertyIterator()
-	it.Each(func(item interface{}) {
-		_ = item.([]string)
-	})
 }
 
 func TestDeviceGC(t *testing.T) {
