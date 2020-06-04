@@ -17,6 +17,7 @@ func ExampleDevice() {
 	d := u.NewDeviceFromSubsystemSysname("mem", "zero")
 
 	// Extract information
+	fmt.Printf("Sysname:%v\n", d.Sysname())
 	fmt.Printf("Syspath:%v\n", d.Syspath())
 	fmt.Printf("Devpath:%v\n", d.Devpath())
 	fmt.Printf("Devnode:%v\n", d.Devnode())
@@ -25,12 +26,32 @@ func ExampleDevice() {
 	fmt.Printf("Sysnum:%v\n", d.Sysnum())
 	fmt.Printf("IsInitialized:%v\n", d.IsInitialized())
 	fmt.Printf("Driver:%v\n", d.Driver())
+
+	// Use one of the iterators
+	it := d.PropertyIterator()
+	it.Each(func(item interface{}) {
+		kv := item.([]string)
+		_ = fmt.Sprintf("Property:%v=%v\n", kv[0], kv[1])
+	})
+	// Output:
+	// Sysname:zero
+	// Syspath:/sys/devices/virtual/mem/zero
+	// Devpath:/devices/virtual/mem/zero
+	// Devnode:/dev/zero
+	// Subsystem:mem
+	// Devtype:
+	// Sysnum:
+	// IsInitialized:true
+	// Driver:
 }
 
 func TestDeviceZero(t *testing.T) {
 	u := Udev{}
 	d := u.NewDeviceFromDeviceID("c1:5")
 	if d.Subsystem() != "mem" {
+		t.Fail()
+	}
+	if d.Sysname() != "zero" {
 		t.Fail()
 	}
 	if d.Syspath() != "/sys/devices/virtual/mem/zero" {
